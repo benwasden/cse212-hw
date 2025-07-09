@@ -1,9 +1,13 @@
-﻿/// <summary>
+﻿using Microsoft.VisualBasic;
+
+
+/// <summary>
 /// Maintain a Customer Service Queue.  Allows new customers to be 
 /// added and allows customers to be serviced.
 /// </summary>
 public class CustomerService {
-    public static void Run() {
+    public static void Run()
+    {
         // Example code to see what's in the customer service queue:
         // var cs = new CustomerService(10);
         // Console.WriteLine(cs);
@@ -11,24 +15,71 @@ public class CustomerService {
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Can I add one customer and then serve them
+        // Expected Result: It should display the added customer
         Console.WriteLine("Test 1");
+        var cs = new CustomerService(4);
+        cs.AddNewCustomer();
+        cs.ServeCustomer();
 
-        // Defect(s) Found: 
+        // Defect(s) Found: Program failed when trying to serve customer, was removing early from array
 
         Console.WriteLine("=================");
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Can I create an invalid amount and not have the application fail
+        // Expected Result: It should default to 10
         Console.WriteLine("Test 2");
+        var cs2 = new CustomerService(-1);
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.AddNewCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
+        cs2.ServeCustomer();
 
-        // Defect(s) Found: 
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
         // Add more Test Cases As Needed Below
+
+        // Test 3
+        // Scenario: Can I get the error message to appear by adding too many to queue
+        // Expected result: An error will appear when you try to +1 to queue above max amount
+        Console.WriteLine("Test 3");
+        var cs3 = new CustomerService(3);
+        cs3.AddNewCustomer();
+        cs3.AddNewCustomer();
+        cs3.AddNewCustomer();
+        cs3.AddNewCustomer();
+
+        // Defect(s) Found: No message appears. Needed to change from > to >= in AddNewCustomer
+
+        Console.WriteLine("=================");
+
+        // Test 4
+        // Scenario: What happens when I serve a queue with no customers in it
+        // Expected result: An error should pop up
+        Console.WriteLine("Test 4");
+        var cs4 = new CustomerService(3);
+        cs4.ServeCustomer();
+
+        // Defect(s) Found: Unhandled exception error. Needed to add an if/else statement to ServeCustomer to handle a queue of length 0
     }
 
     private readonly List<Customer> _queue = new();
@@ -67,7 +118,7 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
+        if (_queue.Count >= _maxSize) {
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
         }
@@ -87,10 +138,18 @@ public class CustomerService {
     /// <summary>
     /// Dequeue the next customer and display the information.
     /// </summary>
-    private void ServeCustomer() {
-        _queue.RemoveAt(0);
-        var customer = _queue[0];
-        Console.WriteLine(customer);
+    private void ServeCustomer()
+    {
+        if (_queue.Count <= 0)
+        {
+            Console.WriteLine("No customers in queue");
+        }
+        else
+        {
+            var customer = _queue[0];
+            _queue.RemoveAt(0);
+            Console.WriteLine(customer);
+        }
     }
 
     /// <summary>
